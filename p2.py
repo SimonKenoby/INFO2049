@@ -19,7 +19,11 @@ import matplotlib.pyplot as plt
 
 ps = PorterStemmer()
 stop_words = set(stopwords.words("english"))
+# print(stop_words)
+# print(stopwords.words("english"))
 punct = set(string.punctuation)
+
+# print(punct)
 
 pos_files = []
 for root, dirs, files in os.walk("review_polarity/txt_sentoken/pos"):
@@ -45,6 +49,18 @@ for filename in neg_files:
         y.append(0)
 # Positive reviews [0:1000] - Negative reviews [1000:2000]
 
+# reviews, re_test, y, y_test = train_test_split(reviews, y, shuffle=True, test_size=0.01,  random_state=13)
+# print(np.shape(reviews), np.shape(y))
+# TODO: remove this
+
+# example_words = ["python.","pythoner#$%","pythoning.'","pythoned","pythonly?", "you're", "can't", "_election_"]
+# str2 = ' '.join(example_words)
+# print(str2)
+# # str3 = str2.translate(str.maketrans({key: None for key in string.punctuation}))
+# str3 = str2.translate(str.maketrans('','', string.punctuation))
+# print(str3)
+# for w in example_words:
+#     print(ps.stem(w))
 print("\nCleaning & Preprocessing the data..")
 
 def cleanANDPreprocess(word_Reviews):
@@ -65,6 +81,23 @@ def cleanANDPreprocess(word_Reviews):
     # TODO: implement a Stemmer
     return word_revsTFid
 
+# print(np.shape(word_revs))
+# to Count how many words are repeat and understand why the Vectorizer deletes other
+# s = []
+# count = 0
+# for w in word_revs[0]:
+#     if w not in s:
+#         s.append(w)
+#     else: count = count +1
+# print(count)
+# b = np.unique(word_revs[0], return_counts=True)
+# print(b)
+# -----------------------------------
+# a = set(word_revs[0])
+# print(len(a))
+
+
+
 print("\nImplementing Feature Selection..")
 
 ''' smooth_idf:
@@ -72,6 +105,10 @@ print("\nImplementing Feature Selection..")
     Prevents zero divisions. 
  '''
 
+# cvect = CountVectorizer()
+# counts = cvect.fit_transform(word_revsTFid)
+# normCounts = normalize(counts, norm='l1', axis=1)
+# new_X = normCounts.multiply(vectorizer.idf_)
 
 N_reviews = len(reviews) #500
 # N_reviews = len(word_Reviews) #500
@@ -81,11 +118,14 @@ X = vectorizer.fit_transform(word_revsTFid)
 
 # sum tfidf frequency of each term through documents
 sums = X.sum(axis=0)
+# print(sums.sum())
 wPer = [] # over 100 %
+
 for s in sums:
     w = s * 100 / sums.sum()
     wPer = np.append(wPer, w)
 sums = wPer.reshape(1, -1)
+# print(sums.sum())
 
 # print(np.shape(X))
 # print((sums))
@@ -114,7 +154,8 @@ print("\n\tApplying {} as Threshold..".format(threshold))
 # vecThresH = TfidfVectorizer(min_df=3, smooth_idf=False, vocabulary=data[:, 0])
 # X = vecThresH.fit_transform(word_revsTFid)
 print("\tDone!")
-
+# print(np.shape(y[:N_reviews]))
+# print(np.shape(X))
 
 # ----------------------------------------
 # printing a beautiful barGraph
@@ -188,5 +229,5 @@ newReview = cleanANDPreprocess(newReview)
 
 newReview = vectorizer.transform(newReview)
 newReview = newReview.toarray()
-print(mnb.predict(newReview)) # ^^
-print(rndForest.predict(newReview)) # ^^
+print(mnb.predict(newReview))
+print(rndForest.predict(newReview))
