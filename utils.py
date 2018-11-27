@@ -31,8 +31,7 @@ def load_data():
 	return data
 
 
-def kfolds_tfidf(model):
-	data = load_data()
+def kfolds_tfidf(model, data):
 	vectorizer = TfidfVectorizer()
 	X = vectorizer.fit_transform(data['text'])
 	y = data['type'].as_matrix()
