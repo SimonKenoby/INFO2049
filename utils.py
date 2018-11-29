@@ -53,3 +53,24 @@ def kfolds_tfidf(model, data):
 	print("Train accuracy : {}".format(np.mean(train_accuracy)))
 	print("Test accuracy : {}".format(np.mean(test_accuracy)))
 	print(test_accuracy)
+
+def kflods_pos(model, data):
+	X = np.array([])
+	for index, row in data.iterrows():
+		X = np.append(X, np.array(row['fd']))
+	X = X.reshape(2000, -1)
+	y = data['type'].values
+	train_accuracy = []
+	test_accuracy = []
+	kf = KFold(n_splits=10, shuffle = True)
+	for train_index, test_index in kf.split(X):    
+	    X_train = X[train_index]
+	    X_test = X[test_index]
+	    y_train = y[train_index]
+	    y_test = y[test_index]
+	    model.fit(X_train, y_train)
+	    train_accuracy.append(model.score(X_train, y_train))
+	    test_accuracy.append(model.score(X_test, y_test))
+	print("Train accuracy : {}".format(np.mean(train_accuracy)))
+	print("Test accuracy : {}".format(np.mean(test_accuracy)))
+	print(test_accuracy)
